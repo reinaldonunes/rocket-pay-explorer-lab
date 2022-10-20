@@ -48,6 +48,11 @@ const cardNumberPattern = {
   },
 }
 const cardNumberMasked = IMask(cardNumber, cardNumberPattern)
+cardNumberMasked.on("accept", () => {
+  const cardType = cardNumberMasked.masked.currentMask.cardtype
+  setCardType(cardType)
+  updateValuesView(".cc-number", cardNumberMasked, "1234 5678 9012 3456")
+})
 
 const expirationDate = document.querySelector("#expiration-date")
 const expirationDatePattern = {
@@ -66,9 +71,34 @@ const expirationDatePattern = {
   },
 }
 const expirationDateMasked = IMask(expirationDate, expirationDatePattern)
+expirationDate.addEventListener("input", () => {
+  updateValuesView(".cc-expiration .value", expirationDateMasked, "02/2032")
+})
 
 const securityCode = document.querySelector("#security-code")
 const securityCodePattern = {
   mask: "0000",
 }
 const securityCodeMasked = IMask(securityCode, securityCodePattern)
+securityCode.addEventListener("input", () => {
+  updateValuesView(".cc-security .value", securityCodeMasked, "123")
+})
+
+const addCard = document.querySelector("#add-card")
+addCard.addEventListener("click", () => {
+  alert("Parabéns! Você adicionou seu cartão com sucesso!")
+})
+document.querySelector("form").addEventListener("submit", (event) => {
+  event.preventDefault()
+})
+
+const cardHolder = document.querySelector("#card-holder")
+cardHolder.addEventListener("input", () => {
+  const ccHolder = document.querySelector(".cc-holder .value")
+  ccHolder.innerHTML = cardHolder.value ? cardHolder.value : "FULANO DA SILVA"
+})
+
+function updateValuesView(element, code, textbase) {
+  const getElement = document.querySelector(element)
+  getElement.innerText = code.value ? code.value : textbase
+}
